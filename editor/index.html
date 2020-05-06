@@ -74,31 +74,31 @@
 			window.editor = editor; // Expose editor to Console
 			window.THREE = THREE; // Expose THREE to APP Scripts and Console
 			window.VRButton = VRButton; // Expose VRButton to APP Scripts
-
+			//场景区域
 			var viewport = new Viewport( editor );
 			document.body.appendChild( viewport.dom );
-
+			//场景区域下面的工具条
 			var toolbar = new Toolbar( editor );
 			document.body.appendChild( toolbar.dom );
-
+			//侧边栏的脚本编辑界面
 			var script = new Script( editor );
 			document.body.appendChild( script.dom );
-
+			//启动预览界面
 			var player = new Player( editor );
 			document.body.appendChild( player.dom );
-
+			//侧边栏
 			var sidebar = new Sidebar( editor );
 			document.body.appendChild( sidebar.dom );
-
+			//头部菜单
 			var menubar = new Menubar( editor );
 			document.body.appendChild( menubar.dom );
 
 			//
 
 			editor.storage.init( function () {
-
+				
 				editor.storage.get( function ( state ) {
-
+					
 					if ( isLoadingFromHash ) return;
 
 					if ( state !== undefined ) {
@@ -207,7 +207,7 @@
 			var hash = window.location.hash;
 
 			if ( hash.substr( 1, 5 ) === 'file=' ) {
-
+				
 				var file = hash.substr( 6 );
 
 				if ( confirm( 'Any unsaved data will be lost. Are you sure?' ) ) {

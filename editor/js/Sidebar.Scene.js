@@ -6,7 +6,7 @@ import { UIPanel, UIBreak, UIRow, UIColor, UISelect, UIText, UINumber } from './
 import { UIOutliner, UITexture, UICubeTexture } from './libs/ui.three.js';
 
 var SidebarScene = function ( editor ) {
-
+	
 	var signals = editor.signals;
 	var strings = editor.strings;
 
@@ -17,7 +17,7 @@ var SidebarScene = function ( editor ) {
 	// outliner
 
 	function buildOption( object, draggable ) {
-
+		
 		var option = document.createElement( 'div' );
 		option.draggable = draggable;
 		option.innerHTML = buildHTML( object );
@@ -28,7 +28,7 @@ var SidebarScene = function ( editor ) {
 	}
 
 	function getMaterialName( material ) {
-
+		
 		if ( Array.isArray( material ) ) {
 
 			var array = [];
@@ -48,7 +48,7 @@ var SidebarScene = function ( editor ) {
 	}
 
 	function escapeHTML( html ) {
-
+		
 		return html
 			.replace( /&/g, '&amp;' )
 			.replace( /"/g, '&quot;' )
@@ -59,7 +59,7 @@ var SidebarScene = function ( editor ) {
 	}
 
 	function buildHTML( object ) {
-
+		
 		var html = '<span class="type ' + object.type + '"></span> ' + escapeHTML( object.name );
 
 		if ( object.isMesh ) {
@@ -79,7 +79,7 @@ var SidebarScene = function ( editor ) {
 	}
 
 	function getScript( uuid ) {
-
+		
 		if ( editor.scripts[ uuid ] !== undefined ) {
 
 			return ' <span class="type Script"></span>';
@@ -94,8 +94,9 @@ var SidebarScene = function ( editor ) {
 
 	var outliner = new UIOutliner( editor );
 	outliner.setId( 'outliner' );
+	//侧边栏场景导航下对象切换进入
 	outliner.onChange( function () {
-
+		
 		ignoreObjectSelectedSignal = true;
 
 		editor.selectById( parseInt( outliner.getValue() ) );
@@ -103,8 +104,9 @@ var SidebarScene = function ( editor ) {
 		ignoreObjectSelectedSignal = false;
 
 	} );
+	//侧边栏场景导航下双击对象放大到当前对象展示
 	outliner.onDblClick( function () {
-
+		
 		editor.focusById( parseInt( outliner.getValue() ) );
 
 	} );
@@ -114,7 +116,7 @@ var SidebarScene = function ( editor ) {
 	// background
 
 	function onBackgroundChanged() {
-
+		
 		signals.sceneBackgroundChanged.dispatch(
 			backgroundType.getValue(),
 			backgroundColor.getHexValue(),
@@ -124,9 +126,9 @@ var SidebarScene = function ( editor ) {
 		);
 
 	}
-
+	//背景为texture时改变时进入
 	function onTextureChanged( texture ) {
-
+		
 		texture.encoding = texture.isHDRTexture ? THREE.RGBEEncoding : THREE.sRGBEncoding;
 
 		if ( texture.isCubeTexture && texture.isHDRTexture ) {
@@ -153,8 +155,9 @@ var SidebarScene = function ( editor ) {
 		'Equirect': 'Equirect (HDR)'
 
 	} ).setWidth( '150px' );
+	//背景类型改变时进入
 	backgroundType.onChange( function () {
-
+		
 		onBackgroundChanged();
 		refreshBackgroundUI();
 
@@ -166,7 +169,7 @@ var SidebarScene = function ( editor ) {
 
 	container.add( backgroundRow );
 
-	//
+	//背景为color时的颜色选择
 
 	var colorRow = new UIRow();
 	colorRow.setMarginLeft( '90px' );
@@ -176,7 +179,7 @@ var SidebarScene = function ( editor ) {
 
 	container.add( colorRow );
 
-	//
+	//背景为texture时的背景选择
 
 	var textureRow = new UIRow();
 	textureRow.setDisplay( 'none' );
@@ -187,7 +190,7 @@ var SidebarScene = function ( editor ) {
 
 	container.add( textureRow );
 
-	//
+	//背景为CubeTexture时的图片选择
 
 	var cubeTextureRow = new UIRow();
 	cubeTextureRow.setDisplay( 'none' );
@@ -198,7 +201,7 @@ var SidebarScene = function ( editor ) {
 
 	container.add( cubeTextureRow );
 
-	//
+	//背景为Equirect时的图片选择
 
 	var equirectRow = new UIRow();
 	equirectRow.setDisplay( 'none' );
@@ -212,7 +215,7 @@ var SidebarScene = function ( editor ) {
 	//
 
 	function refreshBackgroundUI() {
-
+		
 		var type = backgroundType.getValue();
 
 		colorRow.setDisplay( type === 'Color' ? '' : 'none' );
@@ -225,7 +228,7 @@ var SidebarScene = function ( editor ) {
 	// fog
 
 	function onFogChanged() {
-
+		
 		signals.sceneFogChanged.dispatch(
 			fogType.getValue(),
 			fogColor.getHexValue(),
@@ -244,8 +247,9 @@ var SidebarScene = function ( editor ) {
 		'FogExp2': 'Exponential'
 
 	} ).setWidth( '150px' );
+	//雾类型改变时
 	fogType.onChange( function () {
-
+		
 		onFogChanged();
 		refreshFogUI();
 
@@ -282,10 +286,10 @@ var SidebarScene = function ( editor ) {
 	var fogDensity = new UINumber( 0.05 ).setWidth( '40px' ).setRange( 0, 0.1 ).setStep( 0.001 ).setPrecision( 3 ).onChange( onFogChanged );
 	fogPropertiesRow.add( fogDensity );
 
-	//
+	//进入时或者更改背景或雾时刷新
 
 	function refreshUI() {
-
+		
 		var camera = editor.camera;
 		var scene = editor.scene;
 
@@ -380,7 +384,7 @@ var SidebarScene = function ( editor ) {
 	}
 
 	function refreshFogUI() {
-
+		
 		var type = fogType.getValue();
 
 		fogPropertiesRow.setDisplay( type === 'None' ? 'none' : '' );
@@ -395,11 +399,11 @@ var SidebarScene = function ( editor ) {
 	// events
 
 	signals.editorCleared.add( refreshUI );
-
+	//向场景区域添加或者删除对象的时候执行
 	signals.sceneGraphChanged.add( refreshUI );
-
+	//选择对象改变时执行
 	signals.objectChanged.add( function ( object ) {
-
+		
 		var options = outliner.options;
 
 		for ( var i = 0; i < options.length; i ++ ) {
@@ -416,9 +420,9 @@ var SidebarScene = function ( editor ) {
 		}
 
 	} );
-
+	//选择某个对象的时候执行（场景中选择或者侧边栏选择）
 	signals.objectSelected.add( function ( object ) {
-
+		
 		if ( ignoreObjectSelectedSignal === true ) return;
 
 		outliner.setValue( object !== null ? object.id : null );
