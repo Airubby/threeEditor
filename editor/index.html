@@ -94,7 +94,7 @@
 			document.body.appendChild( menubar.dom );
 
 			//
-
+			//序列化、反序列化
 			editor.storage.init( function () {
 				
 				editor.storage.get( function ( state ) {
@@ -146,31 +146,40 @@
 					}, 1000 );
 
 				}
-
+				//编辑器的信号
 				var signals = editor.signals;
-
+				//几何信息改变处理方法
 				signals.geometryChanged.add( saveState );
+				//对象添加处理方法
 				signals.objectAdded.add( saveState );
+				//对象改变处理方法
 				signals.objectChanged.add( saveState );
+				//对象移除处理方法
 				signals.objectRemoved.add( saveState );
+				//材质改变处理方法
 				signals.materialChanged.add( saveState );
+				//场景背景改变的处理方法
 				signals.sceneBackgroundChanged.add( saveState );
+				//场景雾改变的处理方法
 				signals.sceneFogChanged.add( saveState );
+				//场景图改变的处理方法
 				signals.sceneGraphChanged.add( saveState );
+				//脚本改变的处理方法
 				signals.scriptChanged.add( saveState );
+				//历史改变的处理方法
 				signals.historyChanged.add( saveState );
 
 			} );
 
 			//
-
+			//按住拖拽
 			document.addEventListener( 'dragover', function ( event ) {
 
 				event.preventDefault();
 				event.dataTransfer.dropEffect = 'copy';
 
 			}, false );
-
+			//拖拽抬起
 			document.addEventListener( 'drop', function ( event ) {
 
 				event.preventDefault();
@@ -202,25 +211,27 @@
 			onWindowResize();
 
 			//
-
+			//来自文件
 			var isLoadingFromHash = false;
 			var hash = window.location.hash;
-
+			//如果是从文件加载
 			if ( hash.substr( 1, 5 ) === 'file=' ) {
-				
+				//获取文件的目录
 				var file = hash.substr( 6 );
 
 				if ( confirm( 'Any unsaved data will be lost. Are you sure?' ) ) {
-
+					//文件加载器
 					var loader = new THREE.FileLoader();
+					//不跨域
 					loader.crossOrigin = '';
+					//加载文件
 					loader.load( file, function ( text ) {
 
 						editor.clear();
 						editor.fromJSON( JSON.parse( text ) );
 
 					} );
-
+					//从已有的文件加载
 					isLoadingFromHash = true;
 
 				}

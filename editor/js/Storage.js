@@ -3,26 +3,27 @@
  */
 
 var Storage = function () {
-
+	//浏览器本身的数据库
 	var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-
+	//如果数据库不存在
 	if ( indexedDB === undefined ) {
 
 		console.warn( 'Storage: IndexedDB not available.' );
 		return { init: function () {}, get: function () {}, set: function () {}, clear: function () {} };
 
 	}
-
+	//数据库名称、数据版本
 	var name = 'threejs-editor';
 	var version = 1;
-
+	//数据库句柄
 	var database;
 
 	return {
 
 		init: function ( callback ) {
-
+			//打开数据库
 			var request = indexedDB.open( name, version );
+			//数据库升级回调
 			request.onupgradeneeded = function ( event ) {
 
 				var db = event.target.result;
