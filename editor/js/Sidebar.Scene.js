@@ -15,7 +15,7 @@ var SidebarScene = function ( editor ) {
 	container.setPaddingTop( '20px' );
 
 	// outliner
-
+	//构建选项（对象、是否可以拖拽）
 	function buildOption( object, draggable ) {
 		
 		var option = document.createElement( 'div' );
@@ -26,19 +26,19 @@ var SidebarScene = function ( editor ) {
 		return option;
 
 	}
-
+	//获取材质名称
 	function getMaterialName( material ) {
-		
+		//如果材质是数组
 		if ( Array.isArray( material ) ) {
 
 			var array = [];
-
+			//遍历材质（获取材质名称）
 			for ( var i = 0; i < material.length; i ++ ) {
 
 				array.push( material[ i ].name );
 
 			}
-
+			//，号分割材质名称
 			return array.join( ',' );
 
 		}
@@ -46,7 +46,7 @@ var SidebarScene = function ( editor ) {
 		return material.name;
 
 	}
-
+	//替换到名称当中的特殊字符
 	function escapeHTML( html ) {
 		
 		return html
@@ -57,27 +57,28 @@ var SidebarScene = function ( editor ) {
 			.replace( />/g, '&gt;' );
 
 	}
-
+	//对象名称--几何体名称--材质名称--脚本名称，这些东西组成了tree的一行
+	//对象可以是camera、scene、object、mesh
 	function buildHTML( object ) {
-		
+		//对象的类型
 		var html = '<span class="type ' + object.type + '"></span> ' + escapeHTML( object.name );
-
+		//如果对象时mesh
 		if ( object.isMesh ) {
-
+			//对象的几何体、材质
 			var geometry = object.geometry;
 			var material = object.material;
-
+			//对象当中的几何体名称、材质名称
 			html += ' <span class="type ' + geometry.type + '"></span> ' + escapeHTML( geometry.name );
 			html += ' <span class="type ' + material.type + '"></span> ' + escapeHTML( getMaterialName( material ) );
 
 		}
-
+		//获取脚本
 		html += getScript( object.uuid );
 
 		return html;
 
 	}
-
+	//获取对象关联的脚本（如果存在）
 	function getScript( uuid ) {
 		
 		if ( editor.scripts[ uuid ] !== undefined ) {
@@ -89,29 +90,29 @@ var SidebarScene = function ( editor ) {
 		return '';
 
 	}
-
+	//忽略选择的对象时使用
 	var ignoreObjectSelectedSignal = false;
 
 	var outliner = new UIOutliner( editor );
 	outliner.setId( 'outliner' );
-	//侧边栏场景导航下对象切换进入
+	//侧边栏场景导航下对象切换进入 //添加改变事件
 	outliner.onChange( function () {
-		
+		//忽略对象被选择
 		ignoreObjectSelectedSignal = true;
-
+		//设置选择的对象？？
 		editor.selectById( parseInt( outliner.getValue() ) );
-
+		//启用对象被选择
 		ignoreObjectSelectedSignal = false;
 
 	} );
 	//侧边栏场景导航下双击对象放大到当前对象展示
 	outliner.onDblClick( function () {
-		
+		//关注选择的对象
 		editor.focusById( parseInt( outliner.getValue() ) );
 
 	} );
-	container.add( outliner );
-	container.add( new UIBreak() );
+	container.add( outliner ); //添加到面板当中
+	container.add( new UIBreak() ); //创建分割线
 
 	// background
 
@@ -230,11 +231,11 @@ var SidebarScene = function ( editor ) {
 	function onFogChanged() {
 		
 		signals.sceneFogChanged.dispatch(
-			fogType.getValue(),
-			fogColor.getHexValue(),
-			fogNear.getValue(),
-			fogFar.getValue(),
-			fogDensity.getValue()
+			fogType.getValue(), //雾类型
+			fogColor.getHexValue(), //雾的颜色
+			fogNear.getValue(), //雾的近面
+			fogFar.getValue(), //雾的远面
+			fogDensity.getValue() //雾的衰减
 		);
 
 	}
@@ -242,9 +243,9 @@ var SidebarScene = function ( editor ) {
 	var fogTypeRow = new UIRow();
 	var fogType = new UISelect().setOptions( {
 
-		'None': 'None',
-		'Fog': 'Linear',
-		'FogExp2': 'Exponential'
+		'None': 'None',	//不使用雾
+		'Fog': 'Linear', //线性雾
+		'FogExp2': 'Exponential' //扩展的雾
 
 	} ).setWidth( '150px' );
 	//雾类型改变时
@@ -294,34 +295,34 @@ var SidebarScene = function ( editor ) {
 		var scene = editor.scene;
 
 		var options = [];
-
+		//相机、场景的大纲项
 		options.push( buildOption( camera, false ) );
 		options.push( buildOption( scene, false ) );
-
+		//对象的大纲项
 		( function addObjects( objects, pad ) {
-
+			//遍历场景子节点列表
 			for ( var i = 0, l = objects.length; i < l; i ++ ) {
-
+				//获取一个对象
 				var object = objects[ i ];
-
+				// /构建选项
 				var option = buildOption( object, true );
-				option.style.paddingLeft = ( pad * 10 ) + 'px';
+				option.style.paddingLeft = ( pad * 10 ) + 'px'; //距离左边的间距
 				options.push( option );
-
+				//递归添加
 				addObjects( object.children, pad + 1 );
 
 			}
 
 		} )( scene.children, 1 );
-
+		// 大纲中设置选项
 		outliner.setOptions( options );
-
+		//编辑器中选择的对象不为nul
 		if ( editor.selected !== null ) {
 
 			outliner.setValue( editor.selected.id );
 
 		}
-
+		//场景背景改变
 		if ( scene.background ) {
 
 			if ( scene.background.isColor ) {

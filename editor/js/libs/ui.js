@@ -133,7 +133,7 @@ UIElement.prototype = {
 };
 
 // properties
-
+//定义ui所能改变的样式
 var properties = [ 'position', 'left', 'top', 'right', 'bottom', 'width', 'height', 'border', 'borderLeft',
 	'borderTop', 'borderRight', 'borderBottom', 'borderColor', 'display', 'overflow', 'margin', 'marginLeft', 'marginTop', 'marginRight', 'marginBottom', 'padding', 'paddingLeft', 'paddingTop', 'paddingRight', 'paddingBottom', 'color',
 	'background', 'backgroundColor', 'opacity', 'fontSize', 'fontWeight', 'textAlign', 'textDecoration', 'textTransform', 'cursor', 'zIndex' ];
@@ -141,9 +141,10 @@ var properties = [ 'position', 'left', 'top', 'right', 'bottom', 'width', 'heigh
 properties.forEach( function ( property ) {
 
 	var method = 'set' + property.substr( 0, 1 ).toUpperCase() + property.substr( 1, property.length );
-
+	//原型中添加方法UI.Element.setPosition
+	//设置样式
 	UIElement.prototype[ method ] = function () {
-
+		//这个this应该是代表的element
 		this.setStyle( property, arguments );
 
 		return this;
@@ -153,15 +154,16 @@ properties.forEach( function ( property ) {
 } );
 
 // events
-
+//定义ui所能触发的事件
 var events = [ 'KeyUp', 'KeyDown', 'MouseOver', 'MouseOut', 'Click', 'DblClick', 'Change' ];
 
 events.forEach( function ( event ) {
 
 	var method = 'on' + event;
-
+	//为以上事件添加处理函数
 	UIElement.prototype[ method ] = function ( callback ) {
-
+		//在dom中添加事件
+		//this指向UI.Element本身，callback.bind绑定callback中的this指向elememnt
 		this.dom.addEventListener( event.toLowerCase(), callback.bind( this ), false );
 
 		return this;
@@ -182,8 +184,9 @@ var UISpan = function () {
 
 };
 
+//使用父类的原型构造自己的原型
 UISpan.prototype = Object.create( UIElement.prototype );
-UISpan.prototype.constructor = UISpan;
+UISpan.prototype.constructor = UISpan; //设置构造函数
 
 // UIDiv
 
