@@ -11,6 +11,7 @@ import { MenubarExamples } from './Menubar.Examples.js';
 import { MenubarHelp } from './Menubar.Help.js';
 import { MenubarPlay } from './Menubar.Play.js';
 import { MenubarStatus } from './Menubar.Status.js';
+import { MenubarTest } from './Menubar.Test.js';
 
 var Menubar = function ( editor ) {
 
@@ -25,6 +26,8 @@ var Menubar = function ( editor ) {
 	container.add( new MenubarHelp( editor ) );
 
 	container.add( new MenubarStatus( editor ) );
+
+	container.add( new MenubarTest( editor ) );
 
 	return container;
 
