@@ -25,22 +25,33 @@ var MenubarTest = function ( editor ) {
 	container.add( options );
 
 	// Box
+	var items = [
+		{ title: 'menubar/test/box', file: 'test.jigui.json' }
+	];
+	var loader = new THREE.FileLoader();
+	for ( var i = 0; i < items.length; i ++ ) {
 
-	var option = new UIRow();
-	option.setClass( 'option' );
-	option.setTextContent( strings.getKey( 'menubar/add/box' ) );
-	option.onClick( function () {
+		( function ( i ) {
 
-		// var geometry = new THREE.BoxBufferGeometry( 1, 1, 1, 1, 1, 1 );
-		// var mesh = new THREE.Mesh( geometry, new THREE.MeshStandardMaterial() );
-		// mesh.name = 'Box';
+			var item = items[ i ];
 
-		// editor.execute( new AddObjectCommand( editor, mesh ) );
-		editor.loader.loadFiles('../examples/test.jigui.json');
+			var option = new UIRow();
+			option.setClass( 'option' );
+			option.setTextContent( strings.getKey( item.title ) );
+			option.onClick( function () {
+				loader.load( 'examples/' + item.file, function ( text ) {
+					console.log(text)
+					var mesh = new THREE.Mesh(text.geometries, text.materials);
+					// editor.execute( new AddObjectCommand( editor, mesh ) );
 
-	} );
-	options.add( option );
-	
+				} );
+			} );
+			options.add( option );
+
+		} )( i );
+
+	}
+
 	return container;
 
 };
