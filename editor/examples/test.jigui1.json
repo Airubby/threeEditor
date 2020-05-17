@@ -6,10 +6,10 @@
 	},
 	"geometries": [
 		{
-			"uuid": "098DACFF-CBBA-43F2-A59A-883EBAC6C291",
+			"uuid": "58605364-1ABB-48BA-9D46-029099DA5766",
 			"type": "BoxBufferGeometry",
 			"width": 1,
-			"height": 1,
+			"height": 3,
 			"depth": 1,
 			"widthSegments": 1,
 			"heightSegments": 1,
@@ -65,7 +65,7 @@
 		"name": "Box",
 		"layers": 1,
 		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0.089906,0,0,1],
-		"geometry": "098DACFF-CBBA-43F2-A59A-883EBAC6C291",
+		"geometry": "58605364-1ABB-48BA-9D46-029099DA5766",
 		"material": "CCF36653-D59E-40AE-AA55-D928C90441E3"
 	}
 }

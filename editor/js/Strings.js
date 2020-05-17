@@ -79,6 +79,7 @@ var Strings = function ( config ) {
 			'menubar/help/about': 'About',
 
 			'menubar/test': 'Test',
+			'menubar/test/box':'box',
 
 			'sidebar/scene': 'Scene',
 			'sidebar/scene/background': 'Background',
@@ -703,6 +704,7 @@ var Strings = function ( config ) {
 			'menubar/help/about': '关于',
 
 			'menubar/test': '测试',
+			'menubar/test/box':'测试盒子',
 
 			'sidebar/scene': '场景',
 			'sidebar/scene/background': '背景',
